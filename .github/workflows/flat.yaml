@@ -21,6 +21,6 @@ jobs:
       - name: Fetch data 
         uses: githubocto/flat@v3
         with:
-          http_url: https://yarraleisure.perfectgym.com.au/clientportal2/Groups/GroupsCalendar/GroupList
+          http_url: https://yarraleisure.perfectgym.com.au/clientportal2/Groups/GroupsCalendar/GroupList?clubId=3&vacancies=1&ageLimitId=3&pageNumber=1&activityCategoryId=null&activityUserLevelId=null&daysOfWeek=[]&semesterIds=[]&query.pagenumber=1&query.pagesize=50
           downloaded_filename: classes.json 
           postprocess: postprocess.ts
