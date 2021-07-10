@@ -300,9 +300,13 @@
 //   }
 
 import { readJSON, writeCSV } from 'https://deno.land/x/flat@0.0.11/mod.ts'
+import {Octokit} from 'https://cdn.skypack.dev/@octokit/rest';
+
+const octokit = new Octokit({
+    auth: Deno.env.get('GH_TOKEN')
+})
 
 const json = await readJSON(Deno.args[0])
-
 const csvFilePath = "classes.csv"
 
 // {
@@ -321,13 +325,32 @@ const csvFilePath = "classes.csv"
 const currentClasses = []
 for (const c of json.Data) {
     if (c.Name.includes("Saturday") || c.Name.includes("Sunday")){
-        currentClasses.push({
+        const swimClass = {
             name: c.Name,
             status: c.Status,
             available: c.BookingIndicator.Available,
             limit: c.BookingIndicator.Limit,
-        })
+        }
+        currentClasses.push(swimClass)
+
+        if (swimClass.available > 0) {
+            await octokit.request("POST /repos/dalanmiller/baby-swim-flat/issues", {
+                owner: 'dalanmiller',
+                repo: 'baby-swim-flat',
+                title: `Class available ${swimClass.name}`,
+                body: `
+# ${swimClass.name}
+status: ${swimClass.status}
+available: ${swimClass.available}
+limit: ${swimClass.limit}
+
+https://yarraleisure.perfectgym.com.au/clientportal2/?saquwjj4kvg5rhji23pg24fh4e=mxa3seq5jbe75bguags2gsr3ye#/Groups/3?ageLimitId=3&vacancies=1
+`
+            })
+        }
     }
 }
+
+
 
 await writeCSV(csvFilePath, currentClasses) 
