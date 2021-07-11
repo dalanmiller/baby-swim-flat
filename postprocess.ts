@@ -299,7 +299,8 @@
 //     ]
 //   }
 
-import { readJSON, writeCSV } from 'https://deno.land/x/flat@0.0.11/mod.ts'
+import { readJSON, writeJSON, writeCSV } from 'https://deno.land/x/flat@0.0.11/mod.ts'
+// import {format} from 'https://cdn.skypack.dev/prettier';
 import {Octokit} from 'https://cdn.skypack.dev/@octokit/rest';
 
 const octokit = new Octokit({
@@ -307,6 +308,16 @@ const octokit = new Octokit({
 })
 
 const json = await readJSON(Deno.args[0])
+// writeJSON(
+//     Deno.args[0], 
+//     format(
+//         JSON.stringify(json),
+//         {
+//             parser: "json",
+//         }
+//     )
+// )
+
 const csvFilePath = "classes.csv"
 
 // {
@@ -352,5 +363,8 @@ https://yarraleisure.perfectgym.com.au/clientportal2/?saquwjj4kvg5rhji23pg24fh4e
 }
 
 
-
-await writeCSV(csvFilePath, currentClasses) 
+if (currentClasses.length ) {
+    await writeCSV(csvFilePath, currentClasses)
+} else {
+    await writeCSV(csvFilePath, [{"name": null, "status": null, "available": null, "limit": null}])
+}
