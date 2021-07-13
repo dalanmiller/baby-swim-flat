@@ -349,6 +349,7 @@ for (const c of json.Data) {
                 owner: 'dalanmiller',
                 repo: 'baby-swim-flat',
                 title: `Class available ${swimClass.name}`,
+                assignees: "dalanmiller",
                 body: `
 # ${swimClass.name}
 status: ${swimClass.status}
@@ -356,6 +357,8 @@ available: ${swimClass.available}
 limit: ${swimClass.limit}
 
 https://yarraleisure.perfectgym.com.au/clientportal2/?saquwjj4kvg5rhji23pg24fh4e=mxa3seq5jbe75bguags2gsr3ye#/Groups/3?ageLimitId=3&vacancies=1
+
+@dalanmiller
 `
             })
         }
