@@ -335,7 +335,6 @@ const csvFilePath = "classes.csv"
 
 const currentClasses = []
 for (const c of json.Data) {
-    if (c.Name.includes("Saturday") || c.Name.includes("Sunday")){
         const swimClass = {
             name: c.Name,
             status: c.Status,
@@ -344,7 +343,7 @@ for (const c of json.Data) {
         }
         currentClasses.push(swimClass)
 
-        if (swimClass.available > 0) {
+        if (swimClass.available > 0 && (swimClass.name.includes("Saturday") || swimClass.name.includes("Sunday")) ) {
             await octokit.request("POST /repos/dalanmiller/baby-swim-flat/issues", {
                 owner: 'dalanmiller',
                 repo: 'baby-swim-flat',
@@ -361,7 +360,6 @@ https://yarraleisure.perfectgym.com.au/clientportal2/?saquwjj4kvg5rhji23pg24fh4e
 @dalanmiller
 `
             })
-        }
     }
 }
 
