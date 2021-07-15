@@ -299,17 +299,21 @@
 //     ]
 //   }
 
-import { readJSON, writeJSON, writeCSV } from 'https://deno.land/x/flat@0.0.11/mod.ts'
+import {
+  readJSON,
+  writeJSON,
+  writeCSV,
+} from "https://deno.land/x/flat@0.0.11/mod.ts";
 // import {format} from 'https://cdn.skypack.dev/prettier';
-import {Octokit} from 'https://cdn.skypack.dev/@octokit/rest';
+import { Octokit } from "https://cdn.skypack.dev/@octokit/rest";
 
 const octokit = new Octokit({
-    auth: Deno.env.get('GH_TOKEN')
-})
+  auth: Deno.env.get("GH_TOKEN"),
+});
 
-const json = await readJSON(Deno.args[0])
+const json = await readJSON(Deno.args[0]);
 // writeJSON(
-//     Deno.args[0], 
+//     Deno.args[0],
 //     format(
 //         JSON.stringify(json),
 //         {
@@ -318,7 +322,7 @@ const json = await readJSON(Deno.args[0])
 //     )
 // )
 
-const csvFilePath = "classes.csv"
+const csvFilePath = "classes.csv";
 
 // {
 //         "Id": 3359,
@@ -333,39 +337,47 @@ const csvFilePath = "classes.csv"
 //           "Available": 0
 //         },
 
-const currentClasses = []
+const currentClasses = [];
 for (const c of json.Data) {
-        const swimClass = {
-            name: c.Name,
-            status: c.Status,
-            available: c.BookingIndicator.Available,
-            limit: c.BookingIndicator.Limit,
-        }
-        currentClasses.push(swimClass)
+  const swimClass = {
+    name: c.Name,
+    status: c.Status,
+    available: c.BookingIndicator.Available,
+    limit: c.BookingIndicator.Limit,
+  };
+  currentClasses.push(swimClass);
 
-        if (swimClass.available > 0 && (swimClass.name.includes("Saturday") || swimClass.name.includes("Sunday")) ) {
-            await octokit.request("POST /repos/dalanmiller/baby-swim-flat/issues", {
-                owner: 'dalanmiller',
-                repo: 'baby-swim-flat',
-                title: `Class available ${swimClass.name}`,
-                assignees: "dalanmiller",
-                body: `
-# ${swimClass.name}
-status: ${swimClass.status}
-available: ${swimClass.available}
-limit: ${swimClass.limit}
+  if (
+    swimClass.available > 0 &&
+    (swimClass.name.includes("Saturday") || swimClass.name.includes("Sunday"))
+  ) {
+    try {
+      await octokit.request("POST /repos/dalanmiller/baby-swim-flat/issues", {
+        owner: "dalanmiller",
+        repo: "baby-swim-flat",
+        title: `Class available ${swimClass.name}`,
+        assignees: ["dalanmiller"],
+        body: `
+    # ${swimClass.name}
+    status: ${swimClass.status}
+    available: ${swimClass.available}
+    limit: ${swimClass.limit}
 
-https://yarraleisure.perfectgym.com.au/clientportal2/?saquwjj4kvg5rhji23pg24fh4e=mxa3seq5jbe75bguags2gsr3ye#/Groups/3?ageLimitId=3&vacancies=1
+    https://yarraleisure.perfectgym.com.au/clientportal2/?saquwjj4kvg5rhji23pg24fh4e=mxa3seq5jbe75bguags2gsr3ye#/Groups/3?ageLimitId=3&vacancies=1
 
-@dalanmiller
-`
-            })
+    @dalanmiller
+    `,
+      });
+    } catch (e) {
+      console.log(e);
     }
+  }
 }
 
-
-if (currentClasses.length ) {
-    await writeCSV(csvFilePath, currentClasses)
+if (currentClasses.length) {
+  await writeCSV(csvFilePath, currentClasses);
 } else {
-    await writeCSV(csvFilePath, [{"name": null, "status": null, "available": null, "limit": null}])
+  await writeCSV(csvFilePath, [
+    { name: null, status: null, available: null, limit: null },
+  ]);
 }
