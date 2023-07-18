@@ -105,22 +105,6 @@ const octokit = new Octokit({
 });
 
 const json = await readJSON(Deno.args[0]);
-// const csvFilePath = "classes.csv";
-
-
-// {
-//         "Id": 3359,
-//         "Name": "Term 3 - Wednesday 11.00am Babies",
-//         "MaxUserNumber": 8,
-//         "Level": "Babies",
-//         "Trainer": "Robyn Gosbell",
-//         "Status": "FullBooked",
-//         "BookingIndicator": {
-//           "Indicator": 0,
-//           "Limit": 8,
-//           "Available": 0
-//         },
-
 if ( json.BookingIndicator.Available >= 1 ) {
 
   try {
