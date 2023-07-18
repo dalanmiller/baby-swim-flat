@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - .github/workflows/swim-class-check.yaml 
+      - postprocess.ts
   workflow_dispatch: 
   schedule:
     - cron: '*/10 * * * *' 
