@@ -98,7 +98,7 @@ import {
   writeJSON,
   // writeCSV,
 } from "https://deno.land/x/flat@0.0.15/mod.ts";
-import { Octokit } from "https://cdn.skypack.dev/@octokit/rest";
+import { Octokit } from "https://esm.sh/@octokit/rest";
 
 const octokit = new Octokit({
   auth: Deno.env.get("GH_TOKEN"),
