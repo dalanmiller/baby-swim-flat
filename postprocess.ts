@@ -89,6 +89,7 @@ import {
   // writeCSV,
 } from "https://deno.land/x/flat@0.0.15/mod.ts";
 import { Octokit } from "https://esm.sh/@octokit/rest";
+import * as log from "https://deno.land/std@0.194.0/log/mod.ts";
 
 const octokit = new Octokit({
   auth: Deno.env.get("GH_TOKEN"),
@@ -96,10 +97,14 @@ const octokit = new Octokit({
 
 const json = await readJSON(Deno.args[0]);
 if ( json.BookingIndicator.Available >= 1 ) {
+  log.info("Found available booking?")
 
   const targetUser = json.Users.filter( user => user.User.FirstName != 'Daniel' )
+  log.info("Target user found")
   if (targetUser.Status != "Unavailable") {
+    log.info("Status of targetUser is not 'Unavailable'", targetUser)
     try {
+      log.info("Attempting to make request to Github")
       await octokit.request("POST /repos/dalanmiller/baby-swim-flat/issues", {
         owner: "dalanmiller",
         repo: "baby-swim-flat",
@@ -119,7 +124,7 @@ if ( json.BookingIndicator.Available >= 1 ) {
     `,
       });
     } catch (e) {
-      console.log(e);
+      log.error(e);
       Deno.exit(1)
     }
   }
