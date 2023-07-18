@@ -50,12 +50,7 @@
 //       "Status": "Unavailable",
 //       "Reason": null,
 //       "User": {
-//         "Id": 189039,
-//         "FirstName": "Callum",
-//         "LastName": "Miller",
-//         "PhotoUrl": null,
-//         "Initials": "CM",
-//         "IsCurrentUser": false
+//         ...
 //       },
 //       "BookedSeatNumber": null,
 //       "StandByQueueNumber": null
@@ -80,12 +75,7 @@
 //       "Status": "Unavailable",
 //       "Reason": null,
 //       "User": {
-//         "Id": 189038,
-//         "FirstName": "Daniel",
-//         "LastName": "Miller",
-//         "PhotoUrl": null,
-//         "Initials": "YOU",
-//         "IsCurrentUser": true
+//         ...
 //       },
 //       "BookedSeatNumber": null,
 //       "StandByQueueNumber": null
@@ -107,17 +97,21 @@ const octokit = new Octokit({
 const json = await readJSON(Deno.args[0]);
 if ( json.BookingIndicator.Available >= 1 ) {
 
-  try {
+  const targetUser = json.Users.filter( user => user.User.FirstName != 'Daniel' )
+  if (targetUser.Status != "Unavailable") {
+    try {
       await octokit.request("POST /repos/dalanmiller/baby-swim-flat/issues", {
         owner: "dalanmiller",
         repo: "baby-swim-flat",
-        title: `Class available ${swimClass.name}`,
+        title: `Class available! ${json.name}`,
         assignees: ["dalanmiller"],
         body: `
-    # ${swimClass.name}
-    status: ${swimClass.status}
-    available: ${swimClass.available}
-    limit: ${swimClass.limit}
+    # ${json.name}
+    status: ${json.status}
+    available: ${json.BookingIndicator.Available}
+    limit: ${json.BookingIndicator.Limit}
+
+    UserDetail: ${targetUser.GroupInfo}
 
     https://yarraleisure.perfectgym.com.au/clientportal2/?saquwjj4kvg5rhji23pg24fh4e=mxa3seq5jbe75bguags2gsr3ye#/Groups/3?ageLimitId=3&vacancies=1
 
@@ -126,7 +120,9 @@ if ( json.BookingIndicator.Available >= 1 ) {
       });
     } catch (e) {
       console.log(e);
+      Deno.exit(1)
     }
+  }
 }
 
 const jsonFilePath = "last_read.json"
