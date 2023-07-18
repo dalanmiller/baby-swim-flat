@@ -95,7 +95,11 @@ const octokit = new Octokit({
   auth: Deno.env.get("GITHUB_TOKEN"),
 });
 
+log.info("Reading JSON file: ", Deno.args[0])
 const json = await readJSON(Deno.args[0]);
+log.info("JSON read successful")
+
+log.info("Checking if booking available...")
 if ( json.BookingIndicator.Available > 1 ) {
   log.info("Found available booking?")
 
@@ -124,3 +128,4 @@ if ( json.BookingIndicator.Available > 1 ) {
     Deno.exit(1)
   }
 }
+log.info("Done.")
