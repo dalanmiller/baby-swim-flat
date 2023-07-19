@@ -20,7 +20,7 @@ jobs:
         with:
           deno-version: v1.x     
       - name: Fetch data 
-        uses: githubocto/flat@v3.X
+        uses: githubocto/flat@v3.4.0
         with:
           http_url: https://yarraleisure.perfectgym.com.au/clientportal2/Groups/GroupDetailsModal/Details?groupId=6462
           downloaded_filename: swim-class.json 
