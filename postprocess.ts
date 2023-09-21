@@ -100,7 +100,7 @@ const json = await readJSON(Deno.args[0]);
 log.info("JSON read successful")
 
 log.info("Checking if booking available...")
-if ( json.BookingIndicator.Available > 1 ) {
+if ( json.BookingIndicator.Available > 0 ) {
   log.info("Found available booking?")
 
   try {
